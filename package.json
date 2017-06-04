@@ -1,7 +1,7 @@
 {
   "name": "thing-it-device-xiaomi-smart-plant-monitor",
   "version": "0.0.1",
-  "description": "[thing-it-node] Device Plugin Atlas Scientific meter devices.",
+  "description": "[thing-it-node] Device Plugin for the Xiaomi Smart Plant Monitor.",
   "authors": "Marc Gille",
   "keywords": [
     "IoT",
