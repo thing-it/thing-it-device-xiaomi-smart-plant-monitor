@@ -18,36 +18,11 @@ by means of [thing-it-node](https://github.com/marcgille/thing-it-node) and [thi
 ## Installation
 
 ### Hardware Setup
-Your **[thing-it-node]** communicate with your [Xiaomi Smart Plant Monitor] (http://xiaomi-smart-plant-monitor.com/) Device via the **I2C** Protocol. Because of that the Device have first to be switched manually into **I2C** mode.
-This is described in detail on every [Xiaomi Smart Plant Monitor](http://xiaomi-smart-plant-monitor.com/) Device Datasheet.
-e.g. [PH Probe](https://www.xiaomi-smart-plant-monitor.com/_files/_datasheets/_circuit/pH_EZO_datasheet.pdf) on page 40.
-
-Then connect your [Xiaomi Smart Plant Monitor](http://xiaomi-smart-plant-monitor.com/) metering product to the GPIOs of your Single-Board Computer
-e.g. the pH probe to your Raspberry Pi Zero as follows
-
-<p align="center"><a href="./documentation/images/hardware-setup.jpg"><img src="./documentation/images/hardware-setup.jpg" width="70%" height="70%"></a></p>
-
-or for details like in the wireframe below
-
-<p align="center"><a href="./documentation/images/wireframe.png"><img src="./documentation/images/wireframe.png" width="70%" height="70%"></a></p>
-
-**Note:** I2C normally requires extra PullUp resistors on his data wires. On the Raspberry Pi they are already build in.
-
-
-[Xiaomi Smart Plant Monitor](http://xiaomi-smart-plant-monitor.com/) has plenty of documentation for the setup of the different probes.
 
 ### Installation of NodeJS and [thing-it-node]
 
 First, install node.js and **[thing-it-node]** on your Raspberry Pi following the instructions on the [[thing-it-node] Wiki](https://github.com/marcgille/thing-it-node/wiki/Raspberry-Pi-Installation).
 
-To let the Pi comunicate with the Atlas Device you have to activate  the Pis **I2C** interface via
- 
-```
-sudo raspi-config
-```
- 
-Choose **8. Advanced Options** and then **7. I2C**.
- 
 ### Initialization and Start of [thing-it-node] 
 
 The **[thing-it-device-xiaomi-smart-plant-monitor]** Plugin is installed with **[thing-it-node]**, hence there is no need to install it separately.
