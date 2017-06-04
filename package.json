@@ -1,24 +1,19 @@
 {
   "name": "thing-it-device-xiaomi-smart-plant-monitor",
-  "version": "0.0.18",
+  "version": "0.0.1",
   "description": "[thing-it-node] Device Plugin Atlas Scientific meter devices.",
-  "authors": "Marc Gille, Julian Seibert",
+  "authors": "Marc Gille",
   "keywords": [
     "IoT",
     "thing-it",
-    "Scientific",
-    "pH",
-    "Aquaponics"
+    "Xioma"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/marcgille/thing-it-device-xiaomi-smart-plant-monitor"
   },
   "dependencies": {
-    "i2c-bus": "^1.0.2",
-    "lodash": "^4.1.0",
     "noble": "^1.8.1",
-    "q": "^1.5.0",
-    "thing-it-test": "0.0.15"
+    "q": "^1.5.0"
   }
 }
