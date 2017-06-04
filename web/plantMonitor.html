@@ -1,0 +1,14 @@
+<div class="flexLayout flexJustifyCenter" style="width: 100%">
+    <div class="flexLayout flexJustifyCenter">
+        <div><span class="lightPrimaryColor fontSize3">{{component._state.illumination | number:0}}</span><span
+                class="fontSize0_8 lightPrimaryColor">lx</span></div>
+        <div><span class="lightPrimaryColor fontSize3">{{component._state.temperature | number:1}}&deg;</span><span
+                class="fontSize0_8 lightPrimaryColor">C</span></div>
+    </div>
+    <div class="marginTop1 flexLayout flexJustifyCenter">
+        <div><span class="lightPrimaryColor fontSize3">{{component._state.humidity | number:0}}</span><span
+                class="fontSize0_8 lightPrimaryColor">%</span></div>
+        <div><span class="lightPrimaryColor fontSize3">{{component._state.fertility | number:1}}</span><span
+                class="fontSize0_8 lightPrimaryColor">&micro;S/cm</span></div>
+    </div>
+</div>

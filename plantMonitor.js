@@ -84,13 +84,13 @@ function PlantMonitor() {
     PlantMonitor.prototype.start = function () {
         var deferred = q.defer();
 
-        this.state = {illumination: 6.0, temperature: 7.0, humidity: 6.0, fertility: 5.0};
+        this.state = {illumination: 10000, temperature: 24, humidity: 66, fertility: 5.0};
 
         if (this.isSimulated()) {
             this.interval = setInterval(function () {
-                this.state.illumination = 5 + 0.1 * new Date().getTime() % 2;
-                this.state.temperature = 5 + 0.1 * new Date().getTime() % 2;
-                this.state.humidity = 5 + 0.1 * new Date().getTime() % 2;
+                this.state.illumination = 10000 + 1000 * new Date().getTime() % 4;
+                this.state.temperature = 17 + new Date().getTime() % 10;
+                this.state.humidity = 50 + 50 * new Date().getTime() % 50;
                 this.state.fertility = 5 + 0.1 * new Date().getTime() % 2;
 
                 this.publishStateChange();
