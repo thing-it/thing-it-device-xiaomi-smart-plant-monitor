@@ -28,7 +28,7 @@ First, install node.js and **[thing-it-node]** on your Raspberry Pi following th
 
 The **[thing-it-device-xiaomi-smart-plant-monitor]** Plugin is installed with **[thing-it-node]**, hence there is no need to install it separately.
 
-The Plugin supports Autodiscovery for connected I2C devices, hence you only have to create a directory in which you intend to run the configuration, e.g.
+The Plugin supports Autodiscovery for connected Plant Monitor devices, hence you only have to create a directory in which you intend to run the configuration, e.g.
  
 ```
 mkdir ~/xiaomi-smart-plant-monitor-test
@@ -47,14 +47,14 @@ and then start **[thing-it-node]** via
 tin run
 ```
 
-Note, that at this point Autodiscovery would only discover distinct products such as pH meter or temperature sensor. It will not be able to distinguish between two
-pH meters if you set up an I2C bus as opposed to the single device setup above.
 
 If you don't want to use Autodiscovery, you may use configurations like the [sample configuration]("./examples.configuration") via
 
 ```
 tin example --device xiaomi-smart-plant-monitor
 ```
+
+In this case the concrete device names can be obtained from the Mobile App the Manufacturer provides.
 
 If you want to pair the **[thing-it-node]** Gateway and its sample configuration with [thing-it.com](https://www.thing-it.com), invoke
 
