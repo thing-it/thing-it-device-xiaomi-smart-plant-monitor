@@ -79,12 +79,12 @@ The following screenshot shows the Node Page of the [sample configuration]("./ex
 
 ## Where to go from here ...
 
-Obviously, you may set up more complex configuration, e.g. an aquaponics solution with
+Obviously, you may set up more complex configuration, e.g. a garden irrigation solution solution with
 
-* water temperature sensors,
-* water level sensors,
-* switches for pumps, feeders, shades and fans, 
-* cameras to watch the fish ponds remotely etc.
+* pH sensors,
+* switches for taps, pumps, fertility feeders, shades and fans,
+* cameras to monitor plants remotely,
+* PIR sensors to detect animals etc.
 
 Or, you want to distribute a set of sensors and correlate their historical data with wheather data and other things on [thing-it.com](https://www.thing-it.com).
 
