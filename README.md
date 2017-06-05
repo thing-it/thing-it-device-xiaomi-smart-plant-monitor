@@ -3,7 +3,7 @@
 [![NPM](https://nodei.co/npm/thing-it-device-xiaomi-smart-plant-monitor.png)](https://nodei.co/npm/thing-it-device-xiaomi-smart-plant-monitor/)
 [![NPM](https://nodei.co/npm-dl/thing-it-device-xiaomi-smart-plant-monitor.png)](https://nodei.co/npm/thing-it-device-xiaomi-smart-plant-monitor/)
 
-[thing-it-node] Device Plugin for the [Xiaomi Smart Plant Monitor](http://xiaomi-smart-plant-monitor.com/).
+[thing-it-node] Device Plugin for the [Xiaomi Smart Plant Monitor](https://xiaomi-mi.com/sockets-and-sensors/xiaomi-huahuacaocao-flower-care-smart-monitor/).
 
 This allows you to monitor
 
