@@ -1,14 +1,28 @@
 <div class="flexLayout flexJustifyCenter" style="width: 100%">
-    <div class="flexLayout flexJustifyCenter">
-        <div><span class="lightPrimaryColor fontSize3">{{component._state.illumination | number:0}}</span><span
-                class="fontSize0_8 lightPrimaryColor">lx</span></div>
-        <div><span class="lightPrimaryColor fontSize3">{{component._state.temperature | number:1}}&deg;</span><span
-                class="fontSize0_8 lightPrimaryColor">C</span></div>
-    </div>
-    <div class="marginTop1 flexLayout flexJustifyCenter">
-        <div><span class="lightPrimaryColor fontSize3">{{component._state.humidity | number:0}}</span><span
-                class="fontSize0_8 lightPrimaryColor">%</span></div>
-        <div><span class="lightPrimaryColor fontSize3">{{component._state.fertility | number:1}}</span><span
-                class="fontSize0_8 lightPrimaryColor">&micro;S/cm</span></div>
+    <div>
+        <div class="flexLayout flexJustifyCenter">
+            <div style="color: #F9AE00"><i class="mode icon sl-sun fontSize2"></i><span
+                    class="marginLeft0_5 fontSize3"><span ng-if="component._state.illumination">{{component._state.illumination | number:0}}</span><span
+                    ng-if="!component._state.illumination">-</span></span><span
+                    class="fontSize0_8">lx</span></div>
+            <div class="marginLeft1" style="color: red"><i class="mode icon sl-thermometer-medium fontSize2"></i><span
+                    class="marginLeft0_5 fontSize3"><span ng-if="component._state.temperature">{{component._state.temperature | number:1}}</span><span
+                    ng-if="!component._state.temperature">-</span></span><span
+                    class="fontSize0_8">&deg;C</span></div>
+        </div>
+        <div class="marginTop1 flexLayout flexJustifyCenter">
+            <div style="color: cornflowerblue"><i class="mode icon sl-watering-can fontSize2"></i><span
+                    class="marginLeft0_5 fontSize3">
+                <span ng-if="component._state.humidity">{{component._state.humidity | number:0}}</span>
+                <span ng-if="!component._state.humidity">-</span>
+            </span>
+                <span class="fontSize0_8">%</span></div>
+            <div style="color: forestgreen" class="marginLeft1"><i class="mode icon sl-flower fontSize2"></i><span
+                    class="marginLeft0_5 fontSize3">
+                <span ng-if="component._state.fertility">{{component._state.fertility | number:1}}</span>
+                <span ng-if="!component._state.fertility">-</span>
+            </span><span
+                    class="fontSize0_8">&micro;S/cm</span></div>
+        </div>
     </div>
 </div>
