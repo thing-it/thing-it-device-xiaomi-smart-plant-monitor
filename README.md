@@ -69,23 +69,11 @@ Install the **thing-it Mobile App** from the Apple Appstore or Google Play and s
 locally as described [here](https://thing-it.com/thing-it/#/documentationPanel/mobileClient/connectionModes) or just connect your browser under 
 [http://localhost:3001](http://localhost:3001) to check how the Mobile UI would look like.
 
-The following screenshot shows the Node Page of the [sample configuration]("./examples.configuration"), which just defines 3 pH Meters:
+The following screenshot shows the Node Page of the [sample configuration]("./examples.configuration"), which just defines 3 monitors:
 
 <p align="center"><a href="./documentation/images/mobile-ui.png"><img src="./documentation/images/mobile-ui.png" width="70%" height="70%"></a></p>
 
-(with the above values for fish ponds, you probably regret not to have defined a **[thing-it-node]** event processor to send alerts, activate the pump 
-or the like ...) 
 
-You can also run the calibration sequence from the **thing-it Mobile App**:
-
-<p align="center"><a href="./documentation/images/calibration-1.png"><img src="./documentation/images/calibration-1.png" width="50%" height="50%"></a></p>
-
-Open the Device Page, click **Calibrate High**, enter the actual pH value (after waiting a few seconds for the value to stabilize) and then repeat 
-the procedure for **Calibrate Middle** and **Calibrate Low**.
-
-<p align="center"><a href="./documentation/images/calibration-2.png"><img src="./documentation/images/calibration-2.png" width="50%" height="50%"></a></p>
-
-Setting the I2C address works the same way.
 
 ## Where to go from here ...
 
