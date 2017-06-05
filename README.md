@@ -14,6 +14,8 @@ This allows you to monitor
 
 by means of [thing-it-node](https://github.com/marcgille/thing-it-node) and [thing-it.com](http://www.thing-it.com).
 
+<p align="center"><a href="./documentation/images/plant-monitor.jpg"><img src="./documentation/images/mobile-ui.png" width="70%" height="70%"></a></p>
+
 ## Installation
 
 ### Hardware Setup
