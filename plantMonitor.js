@@ -33,11 +33,29 @@ module.exports = {
             type: {
                 id: "decimal"
             }
+        }, {
+            id: "rssi",
+            label: "RSSI",
+            type: {
+                id: "decimal"
+            }
+        }, {
+            id: "batteryLevel",
+            label: "Battery Level",
+            type: {
+                id: "decimal"
+            }
         }],
         services: [],
         configuration: [{
-            id: "deviceId",
-            label: "Device ID",
+            id: "macAddress",
+            label: "MAC Address",
+            type: {
+                id: "string"
+            }
+        }, {
+            id: "name",
+            label: "Name",
             type: {
                 id: "string"
             }
@@ -55,13 +73,34 @@ var q = require('q');
 
 function PlantMonitorDiscovery() {
     PlantMonitorDiscovery.prototype.start = function () {
-        if (!this.node.isSimulated()) {
+        if (this.node.isSimulated()) {
+        } else {
+            if (!this.bluetoothConnector) {
+                this.bluetoothConnector = new BluetoothConnector().initialize();
+
+                this.bluetoothConnector.on('peripheral', function (peripheral) {
+                    var plantMonitor = new PlantMonitor();
+
+                    plantMonitor.uuid = peripheral.address;
+                    plantMonitor.configuration = {
+                        macAddress: peripheral.address,
+                        name: peripheral.advertisement.localName
+                    };
+
+                    this.advertiseDevice(plantMonitor);
+                }.bind(this));
+
+                this.bluetoothConnector.start();
+            }
         }
     };
 
     PlantMonitorDiscovery.prototype.stop = function () {
-        if (discoveryInterval !== undefined && discoveryInterval) {
-            clearInterval(discoveryInterval);
+        if (this.isSimulated()) {
+        } else {
+            if (this.bluetoothConnector) {
+                this.bluetoothConnector.stop();
+            }
         }
     };
 }
@@ -71,20 +110,10 @@ function PlantMonitorDiscovery() {
  * @constructor
  */
 function PlantMonitor() {
-    const DEFAULT_DEVICE_NAME = 'Flower mate';
-    const DATA_SERVICE_UUID = '0000120400001000800000805f9b34fb';
-    const DATA_CHARACTERISTIC_UUID = '00001a0100001000800000805f9b34fb';
-    const FIRMWARE_CHARACTERISTIC_UUID = '00001a0200001000800000805f9b34fb';
-    const REALTIME_CHARACTERISTIC_UUID = '00001a0000001000800000805f9b34fb';
-    const REALTIME_META_VALUE = Buffer.from([0xA0, 0x1F]);
-
-    const SERVICE_UUIDS = [DATA_SERVICE_UUID];
-    const CHARACTERISTIC_UUIDS = [DATA_CHARACTERISTIC_UUID, FIRMWARE_CHARACTERISTIC_UUID, REALTIME_CHARACTERISTIC_UUID];
-
     PlantMonitor.prototype.start = function () {
         var deferred = q.defer();
 
-        this.state = {illumination: 10000, temperature: 24, humidity: 66, fertility: 5.0};
+        this.state = {};
 
         if (this.isSimulated()) {
             this.interval = setInterval(function () {
@@ -99,7 +128,18 @@ function PlantMonitor() {
             deferred.resolve();
         } else {
             if (!this.bluetoothConnector) {
-                this.bluetoothConnector = new BluetoothConnector().initialize();
+                this.bluetoothConnector = new BluetoothConnector().initialize(this.configuration);
+
+                this.bluetoothConnector.on('data', function (data) {
+                    this.state.illumination = data.illumination;
+                    this.state.temperature = data.temperature;
+                    this.state.humidity = data.humidity;
+                    this.state.fertility = data.fertility;
+
+                    this.publishStateChange();
+                }.bind(this));
+
+                this.bluetoothConnector.start();
             }
 
             deferred.resolve();
@@ -119,6 +159,9 @@ function PlantMonitor() {
                 clearInterval(this.interval);
             }
         } else {
+            if (this.bluetoothConnector) {
+                this.bluetoothConnector.stop();
+            }
         }
 
         deferred.resolve();
@@ -140,6 +183,16 @@ function PlantMonitor() {
     };
 }
 
+const DEFAULT_DEVICE_NAME = 'Flower care';
+const DATA_SERVICE_UUID = '0000120400001000800000805f9b34fb';
+const DATA_CHARACTERISTIC_UUID = '00001a0100001000800000805f9b34fb';
+const FIRMWARE_CHARACTERISTIC_UUID = '00001a0200001000800000805f9b34fb';
+const REALTIME_CHARACTERISTIC_UUID = '00001a0000001000800000805f9b34fb';
+const REALTIME_META_VALUE = Buffer.from([0xA0, 0x1F]);
+
+const SERVICE_UUIDS = [DATA_SERVICE_UUID];
+const CHARACTERISTIC_UUIDS = [DATA_CHARACTERISTIC_UUID, FIRMWARE_CHARACTERISTIC_UUID, REALTIME_CHARACTERISTIC_UUID];
+
 /**
  *
  * @constructor
@@ -149,11 +202,40 @@ function BluetoothConnector() {
      *
      * @param macAddress
      */
-    BluetoothConnector.prototype.initialize = function (macAddress) {
-        this._macAddress = macAddress;
+    BluetoothConnector.prototype.initialize = function (filter) {
         this.noble = require('noble');
+        this.filter = filter;
+        this.callbacks = {};
 
-        this.noble.on('discover', this.discover.bind(this));
+        this.noble.on('discover', function (peripheral) {
+            this.discover(peripheral);
+        }.bind(this));
+
+        return this;
+    };
+
+    /**
+     *
+     * @param macAddress
+     */
+    BluetoothConnector.prototype.on = function (event, callback) {
+        this.callbacks[event] = callback;
+    };
+
+    /**
+     *
+     * @param macAddress
+     */
+    BluetoothConnector.prototype.start = function () {
+        if (this.noble.state === 'poweredOn') {
+            this.noble.startScanning([], true);
+        } else {
+            this.noble.on('stateChange', function (state) {
+                if (state === 'poweredOn') {
+                    this.noble.startScanning([], true);
+                }
+            }.bind(this));
+        }
     };
 
     /**
@@ -161,20 +243,20 @@ function BluetoothConnector() {
      * @param peripheral
      */
     BluetoothConnector.prototype.discover = function (peripheral) {
-        debug('Plant sensor discovered: ', peripheral.advertisement.localName);
+        if (!peripheral.advertisement.serviceData || !peripheral.advertisement.serviceData.length ||
+            peripheral.advertisement.serviceData[0].uuid != 'fe95') {
+            return;
+        }
 
-        if (this._macAddress !== undefined) {
-            if (this._macAddress.toLowerCase() === peripheral.address.toLowerCase()) {
-                debug('trying to connect mi flora, living at %s', this._macAddress);
+        console.log('MAC: ', peripheral.address);
+        console.log('Name: ', peripheral.advertisement.localName);
 
-                // start listening the specific device
+        if (this.callbacks['peripheral']) {
+            this.callbacks['peripheral'](peripheral);
+        }
 
-                this.connectDevice(peripheral);
-            }
-        } else if (peripheral.advertisement.localName === DEFAULT_DEVICE_NAME) {
-            debug('no mac address specified, trying to connect available mi flora...');
-
-            // start listening found device
+        if (!this.filter || this.filter.macAddress && this.filter.macAddress.toLowerCase() === peripheral.address.toLowerCase() ||
+            this.filter.name && this.filter.name === peripheral.advertisement.localName) {
 
             this.connectDevice(peripheral);
         }
@@ -186,83 +268,47 @@ function BluetoothConnector() {
      */
     BluetoothConnector.prototype.connectDevice = function (peripheral) {
         if (peripheral.state === 'disconnected') {
-            peripheral.connect();
-            peripheral.once('connect', function () {
-                this.listenDevice(peripheral, this);
+            peripheral.connect(function () {
+                peripheral.discoverSomeServicesAndCharacteristics(SERVICE_UUIDS, CHARACTERISTIC_UUIDS, function (error, services, characteristics) {
+                    characteristics.forEach(function (characteristic) {
+                        switch (characteristic.uuid) {
+                            case DATA_CHARACTERISTIC_UUID:
+                                characteristic.read(function (error, data) {
+                                    if (this.callbacks['data']) {
+                                        this.callbacks['data']({
+                                            temperature: data.readUInt16LE(0) / 10,
+                                            illumination: data.readUInt32LE(3),
+                                            humidity: data.readUInt16BE(6),
+                                            fertility: data.readUInt16LE(8)
+                                        });
+                                    }
+                                }.bind(this));
+                                break;
+                            case FIRMWARE_CHARACTERISTIC_UUID:
+                                characteristic.read(function (error, data) {
+                                    this.firmware = {
+                                        deviceId: peripheral.id,
+                                        batteryLevel: parseInt(data.toString('hex', 0, 1), 16),
+                                        firmwareVersion: data.toString('ascii', 2, data.length)
+                                    };
+                                });
+                                break;
+                            case REALTIME_CHARACTERISTIC_UUID:
+                                characteristic.write(REALTIME_META_VALUE, true);
+                                break;
+                            default:
+                                console.log('Unknown characteristic uuid: ', characteristic.uuid);
+                        }
+                    }.bind(this));
+                }.bind(this));
             }.bind(this));
+            // peripheral.once('connect', function () {
+            //     this.listenDevice(peripheral, this);
+            // }.bind(this));
         }
     };
 
-    /**
-     *
-     * @param peripheral
-     * @param context
-     */
-    BluetoothConnector.prototype.listenDevice = function (peripheral, context) {
-        peripheral.discoverSomeServicesAndCharacteristics(SERVICE_UUIDS, CHARACTERISTIC_UUIDS, function (error, services, characteristics) {
-            characteristics.forEach(function (characteristic) {
-                switch (characteristic.uuid) {
-                    case DATA_CHARACTERISTIC_UUID:
-                        characteristic.read(function (error, data) {
-                            context.parseData(peripheral, data);
-                        });
-                        break;
-                    case FIRMWARE_CHARACTERISTIC_UUID:
-                        characteristic.read(function (error, data) {
-                            context.parseFirmwareData(peripheral, data);
-                        });
-                        break;
-                    case REALTIME_CHARACTERISTIC_UUID:
-                        characteristic.write(REALTIME_META_VALUE, true);
-                        break;
-                    default:
-                        debug('Unknown characteristic uuid: ', characteristic.uuid);
-                }
-            });
-        });
-    };
-
-    /**
-     *
-     * @param peripheral
-     * @param data
-     */
-    BluetoothConnector.prototype.parseData = function (peripheral, data) {
-        this.temperature = data.readUInt16LE(0) / 10;
-        this.lux = data.readUInt32LE(3);
-        this.moisture = data.readUInt16BE(6);
-        this.fertility = data.readUInt16LE(8);
-    };
-
-    /**
-     *
-     * @param peripheral
-     * @param data
-     */
-    BluetoothConnector.prototype.parseFirmwareData = function (peripheral, data) {
-        this.firmware = {
-            deviceId: peripheral.id,
-            batteryLevel: parseInt(data.toString('hex', 0, 1), 16),
-            firmwareVersion: data.toString('ascii', 2, data.length)
-        };
-    };
-
-    /**
-     *
-     */
-    BluetoothConnector.prototype.startScanning = function () {
-        if (this.noble.state === 'poweredOn') {
-            this.noble.startScanning([], true);
-        } else {
-            this.noble.on('stateChange', function (state) {
-                if (state === 'poweredOn') {
-                    this.noble.startScanning([], true);
-                }
-            });
-        }
-    };
-
-    BluetoothConnector.prototype.stopScanning = function () {
+    BluetoothConnector.prototype.stop = function () {
         this.noble.stopScanning();
     };
 }

@@ -1,26 +1,18 @@
 module.exports = {
     label: "Roof Deck",
     id: "roofDeck",
-    autoDiscoveryDeviceTypes: [],
+    autoDiscoveryDeviceTypes: [{
+        plugin: 'xiaomi-smart-plant-monitor/plantMonitor',
+        confirmRegistration: false,
+        persistRegistration: false,
+        defaultConfiguration: {},
+        options: {}
+    }],
     devices: [{
-        label: "Plant Sensor R",
-        id: "plantMonitor1",
+        label: "Plant Sensor Rhododendron",
+        id: "plantMonitorRhododendron",
         plugin: "xiaomi-smart-plant-monitor/plantMonitor",
-        configuration: {},
-        actors: [],
-        sensors: []
-    }, {
-        label: "pH Meter Tilapia II",
-        id: "plantMonitor2",
-        plugin: "xiaomi-smart-plant-monitor/plantMonitor",
-        configuration: {},
-        actors: [],
-        sensors: []
-    }, {
-        label: "pH Meter Koi I",
-        id: "plantMonitor3",
-        plugin: "xiaomi-smart-plant-monitor/plantMonitor",
-        configuration: {},
+        configuration: {macAddress: 'c4:7c:8d:64:36:09'},
         actors: [],
         sensors: []
     }],
