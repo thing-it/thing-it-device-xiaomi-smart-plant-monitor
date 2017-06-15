@@ -20,6 +20,8 @@ by means of [thing-it-node](https://github.com/marcgille/thing-it-node) and [thi
 
 ### Hardware Setup
 
+You only have to remove the battery strip from your Plant Monitor. It will start advertising itself via Bluetooth immediately after.
+
 ### Installation of NodeJS and [thing-it-node]
 
 First, install node.js and **[thing-it-node]** on your Raspberry Pi following the instructions on the [[thing-it-node] Wiki](https://github.com/marcgille/thing-it-node/wiki/Raspberry-Pi-Installation).
@@ -54,7 +56,7 @@ If you don't want to use Autodiscovery, you may use configurations like the [sam
 tin example --device xiaomi-smart-plant-monitor
 ```
 
-In this case the concrete device names can be obtained from the Mobile App the Manufacturer provides.
+In this case the concrete MAC addresses and device names can be obtained from the Mobile App the Manufacturer provides. Hereby, either MAC address or device name is sufficient.
 
 If you want to pair the **[thing-it-node]** Gateway and its sample configuration with [thing-it.com](https://www.thing-it.com), invoke
 
