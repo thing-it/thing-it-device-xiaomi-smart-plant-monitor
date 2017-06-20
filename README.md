@@ -79,7 +79,7 @@ The following screenshot shows the Node Page of the [sample configuration]("./ex
 
 If you use [thing-it.com](https://www.thing-it.com), you can create dashboards like the following
 
-<p align="center"><a href="./documentation/images/dashboard.png"><img src="./documentation/images/mobile-ui.png" width="70%" height="70%"></a></p>
+<p align="center"><a href="./documentation/images/dashboard.png"><img src="./documentation/images/dashboard.png" width="70%" height="70%"></a></p>
 
 ## Where to go from here ...
 
