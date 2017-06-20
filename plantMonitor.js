@@ -22,8 +22,8 @@ module.exports = {
                 id: "decimal"
             }
         }, {
-            id: "moisture",
-            label: "Moisture",
+            id: "humidity",
+            label: "Humidity",
             type: {
                 id: "decimal"
             }
