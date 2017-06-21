@@ -56,7 +56,7 @@ If you don't want to use Autodiscovery, you may use configurations like the [sam
 tin example --device xiaomi-smart-plant-monitor
 ```
 
-In this case the concrete **MAC address**** and **device name** can be obtained from the Mobile App the Manufacturer provides. Hereby, either **MAC address** or **device name** is sufficient.
+In this case the concrete **MAC address** and **device name** can be obtained from the Mobile App the Manufacturer provides. Hereby, either **MAC address** or **device name** is sufficient.
 
 If you want to pair the **[thing-it-node]** Gateway and its sample configuration with [thing-it.com](https://www.thing-it.com), invoke
 
