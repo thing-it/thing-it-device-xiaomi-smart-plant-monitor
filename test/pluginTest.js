@@ -4,12 +4,12 @@ describe('[thing-it] Xiaomi Plant Monitor', function () {
     var testDriver;
 
     before(function () {
-        testDriver = require("thing-it-test").createTestDriver({logLevel: "debug"});
+        testDriver = require("thing-it-test").createTestDriver({logLevel: "debug", simulated: false});
 
         testDriver.registerDevicePlugin('xiaomi-smart-plant-monitor', __dirname + "/../plantMonitor");
     });
     describe('Start Configuration', function () {
-        this.timeout(10000);
+        this.timeout(30000);
 
         it('should complete without error', function (done) {
             setTimeout(function () {

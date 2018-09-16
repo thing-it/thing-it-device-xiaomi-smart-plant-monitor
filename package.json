@@ -1,6 +1,6 @@
 {
   "name": "thing-it-device-xiaomi-smart-plant-monitor",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "[thing-it-node] Device Plugin for the Xiaomi Smart Plant Monitor.",
   "authors": "Marc Gille",
   "keywords": [
@@ -13,9 +13,9 @@
     "url": "https://github.com/marcgille/thing-it-device-xiaomi-smart-plant-monitor"
   },
   "dependencies": {
-    "noble": "^1.8.1",
+    "moment": "^2.18.1",
+    "noble": "^1.9.1",
     "q": "^1.5.0",
-    "thing-it-test": "0.0.15",
-    "moment": "^2.18.1"
+    "thing-it-test": "0.0.15"
   }
 }

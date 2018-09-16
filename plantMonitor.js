@@ -116,6 +116,7 @@ function PlantMonitor() {
         this.state = {};
 
         if (this.isSimulated()) {
+            console.log('Simulated!!!!');
             this.interval = setInterval(function () {
                 this.state.illumination = 10000 + 1000 * new Date().getTime() % 4;
                 this.state.temperature = 17 + new Date().getTime() % 10;
@@ -184,6 +185,7 @@ function PlantMonitor() {
 }
 
 const DEFAULT_DEVICE_NAME = 'Flower care';
+const UUID_SERVICE_XIAOMI = 'fe95';
 const DATA_SERVICE_UUID = '0000120400001000800000805f9b34fb';
 const DATA_CHARACTERISTIC_UUID = '00001a0100001000800000805f9b34fb';
 const FIRMWARE_CHARACTERISTIC_UUID = '00001a0200001000800000805f9b34fb';
@@ -203,13 +205,18 @@ function BluetoothConnector() {
      * @param macAddress
      */
     BluetoothConnector.prototype.initialize = function (filter) {
-        this.noble = require('noble');
-        this.filter = filter;
-        this.callbacks = {};
+        try {
+            this.noble = require('noble');
+            this.filter = filter;
+            this.callbacks = {};
 
-        this.noble.on('discover', function (peripheral) {
-            this.discover(peripheral);
-        }.bind(this));
+            this.noble.on('discover', function (peripheral) {
+                this.discover(peripheral);
+            }.bind(this));
+
+        } catch (x) {
+            console.error(x);
+        }
 
         return this;
     };
@@ -228,11 +235,11 @@ function BluetoothConnector() {
      */
     BluetoothConnector.prototype.start = function () {
         if (this.noble.state === 'poweredOn') {
-            this.noble.startScanning([], true);
+            this.noble.startScanning([UUID_SERVICE_XIAOMI], true);
         } else {
             this.noble.on('stateChange', function (state) {
                 if (state === 'poweredOn') {
-                    this.noble.startScanning([], true);
+                    this.noble.startScanning([UUID_SERVICE_XIAOMI], true);
                 }
             }.bind(this));
         }
@@ -245,18 +252,21 @@ function BluetoothConnector() {
     BluetoothConnector.prototype.discover = function (peripheral) {
         if (!peripheral.advertisement.serviceData || !peripheral.advertisement.serviceData.length ||
             peripheral.advertisement.serviceData[0].uuid != 'fe95') {
+
             return;
         }
 
         console.log('MAC: ', peripheral.address);
-        console.log('Name: ', peripheral.advertisement.localName);
+        // console.log('RSSI: ', peripheral.rssi);
+        // console.log('Name: ', peripheral.advertisement);
+        // console.log('Service data: ', peripheral.advertisement.serviceData);
+
 
         if (this.callbacks['peripheral']) {
             this.callbacks['peripheral'](peripheral);
         }
 
-        if (!this.filter || this.filter.macAddress && this.filter.macAddress.toLowerCase() === peripheral.address.toLowerCase() ||
-            this.filter.name && this.filter.name === peripheral.advertisement.localName) {
+        if (!this.filter || this.filter.macAddress && this.filter.macAddress.toLowerCase() === peripheral.address.toLowerCase()) {
 
             this.connectDevice(peripheral);
         }

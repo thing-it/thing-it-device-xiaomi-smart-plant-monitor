@@ -12,7 +12,7 @@ module.exports = {
         label: "Plant Sensor Rhododendron",
         id: "plantMonitorRhododendron",
         plugin: "xiaomi-smart-plant-monitor/plantMonitor",
-        configuration: {macAddress: 'c4:7c:8d:64:36:09'},
+        configuration: {macAddress: 'c4:7c:8d:66:ca:94'},
         actors: [],
         sensors: []
     }],
