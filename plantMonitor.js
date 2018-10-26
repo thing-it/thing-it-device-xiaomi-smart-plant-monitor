@@ -285,6 +285,12 @@ function BluetoothConnector() {
                             case DATA_CHARACTERISTIC_UUID:
                                 characteristic.read(function (error, data) {
                                     if (this.callbacks['data']) {
+                                        console.log('Data =>', data);
+
+                                        var BitArray = require('node-bitarray');
+
+                                        console.log('Data =>', BitArray.fromBuffer(data).toString());
+
                                         this.callbacks['data']({
                                             temperature: data.readUInt16LE(0) / 10,
                                             illumination: data.readUInt32LE(3),
