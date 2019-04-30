@@ -12,6 +12,9 @@
     "type": "git",
     "url": "https://github.com/marcgille/thing-it-device-xiaomi-smart-plant-monitor"
   },
+  "scripts": {
+    "postversion": "git push && git push --tags && npm publish"
+  },
   "dependencies": {
     "moment": "^2.18.1",
     "noble": "^1.9.1",
