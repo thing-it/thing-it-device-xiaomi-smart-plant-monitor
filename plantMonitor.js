@@ -113,6 +113,12 @@ function PlantMonitor() {
     PlantMonitor.prototype.start = function () {
         var deferred = q.defer();
 
+        this.operationalState = {
+            status: 'PENDING',
+            message: 'Waiting for initialization...'
+        };
+        this.publishOperationalStateChange();
+
         this.state = {};
 
         if (this.isSimulated()) {
@@ -126,6 +132,11 @@ function PlantMonitor() {
                 this.publishStateChange();
             }.bind(this), 20000);
 
+            this.operationalState = {
+                status: 'OK',
+                message: 'Plant Monitor successfully initialized'
+            }
+            this.publishOperationalStateChange();
             deferred.resolve();
         } else {
             if (!this.bluetoothConnector) {
@@ -141,6 +152,14 @@ function PlantMonitor() {
                 }.bind(this));
 
                 this.bluetoothConnector.start();
+
+                if (this.operationalState.status !== 'ERROR') {
+                    this.operationalState = {
+                        status: 'OK',
+                        message: 'Plant Monitor successfully initialized'
+                    }
+                    this.publishOperationalStateChange();          
+                }      
             }
 
             deferred.resolve();
@@ -214,8 +233,13 @@ function BluetoothConnector() {
                 this.discover(peripheral);
             }.bind(this));
 
-        } catch (x) {
+        } catch (x) {            
             console.error(x);
+            this.operationalState = {
+                status: 'ERROR',
+                message: 'Plant Monitor initialization error'
+              }
+              this.publishOperationalStateChange();
         }
 
         return this;
@@ -329,3 +353,4 @@ function BluetoothConnector() {
     };
 }
 
+ 
