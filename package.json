@@ -16,7 +16,7 @@
     "postversion": "git push && git push --tags && npm publish"
   },
   "dependencies": {
-    "moment": "^2.18.1",
+    "moment": "^2.29.2",
     "noble": "^1.9.1",
     "q": "^1.5.0",
     "thing-it-test": "0.0.15"
